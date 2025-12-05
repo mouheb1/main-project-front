@@ -106,16 +106,122 @@ function MiniQuiz() {
       question: "Quelle alternative open source remplace Microsoft Office ?",
       answers: ["Google Docs", "LibreOffice", "Notepad", "Adobe Reader"],
       correct: 1
+    },
+    {
+      question: "Qu'est-ce que la sobriété numérique ?",
+      answers: [
+        "Ne jamais utiliser d'ordinateur",
+        "Réduire l'impact environnemental du numérique",
+        "Utiliser uniquement des réseaux sociaux",
+        "Acheter le dernier smartphone chaque année"
+      ],
+      correct: 1
+    },
+    {
+      question: "Pourquoi est-il important de stocker les données en Europe ?",
+      answers: [
+        "C'est moins cher",
+        "Les serveurs sont plus rapides",
+        "Pour la souveraineté et la protection des données (RGPD)",
+        "Pour avoir un meilleur design"
+      ],
+      correct: 2
+    },
+    {
+      question: "Que signifie 'reconditionner' un ordinateur ?",
+      answers: [
+        "Le jeter à la poubelle",
+        "Le remettre en état pour le réutiliser",
+        "Le peindre en noir",
+        "Acheter un nouveau modèle"
+      ],
+      correct: 1
+    },
+    {
+      question: "Quel est l'avantage principal des logiciels open source ?",
+      answers: [
+        "Ils sont toujours payants",
+        "Le code est secret et fermé",
+        "Ils sont libres, gratuits et modifiables",
+        "Ils ne fonctionnent que sur Mac"
+      ],
+      correct: 2
+    },
+    {
+      question: "Quelle solution permet d'héberger ses fichiers de façon souveraine ?",
+      answers: [
+        "Google Drive",
+        "Dropbox",
+        "iCloud",
+        "Nextcloud"
+      ],
+      correct: 3
+    },
+    {
+      question: "Combien de tonnes de déchets électroniques sont produites par an dans le monde ?",
+      answers: [
+        "5 millions de tonnes",
+        "53 millions de tonnes",
+        "100 mille tonnes",
+        "1 milliard de tonnes"
+      ],
+      correct: 1
+    },
+    {
+      question: "Qu'est-ce que 'La Forge' dans le contexte NIRD ?",
+      answers: [
+        "Un jeu vidéo",
+        "Une usine de métallurgie",
+        "La plateforme des Communs Numériques Éducatifs",
+        "Un restaurant"
+      ],
+      correct: 2
+    },
+    {
+      question: "Quel navigateur respecte davantage la vie privée ?",
+      answers: [
+        "Google Chrome",
+        "Microsoft Edge",
+        "Firefox",
+        "Internet Explorer"
+      ],
+      correct: 2
+    },
+    {
+      question: "Quelle est la durée de vie moyenne d'un smartphone en France ?",
+      answers: [
+        "6 mois",
+        "2-3 ans",
+        "10 ans",
+        "15 ans"
+      ],
+      correct: 1
+    },
+    {
+      question: "Que permet de faire PeerTube ?",
+      answers: [
+        "Envoyer des emails",
+        "Héberger des vidéos de façon décentralisée",
+        "Créer des tableurs",
+        "Jouer en ligne"
+      ],
+      correct: 1
     }
   ];
 
+  // Shuffle and pick 5 random questions on component mount
+  const [shuffledQuestions] = useState(() => {
+    const shuffled = [...questions].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 5);
+  });
+
   const handleAnswer = (index: number) => {
     setSelectedAnswer(index);
-    if (index === questions[currentQuestion].correct) {
+    if (index === shuffledQuestions[currentQuestion].correct) {
       setScore(score + 1);
     }
     setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
+      if (currentQuestion < shuffledQuestions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedAnswer(null);
       } else {
@@ -132,13 +238,26 @@ function MiniQuiz() {
   };
 
   if (showResult) {
+    const perfectScore = score === shuffledQuestions.length;
+    const goodScore = score >= 4;
+    const okScore = score >= 3;
+
     return (
       <div className="text-center">
         <div className="font-retro text-2xl text-[#ffd700] mb-4">
-          {score === questions.length ? 'PARFAIT !' : score >= 2 ? 'BIEN JOUÉ !' : 'CONTINUE !'}
+          {perfectScore ? 'PARFAIT !' : goodScore ? 'EXCELLENT !' : okScore ? 'BIEN JOUÉ !' : 'CONTINUE !'}
         </div>
-        <p className="font-retro text-sm text-[#888] mb-6">
-          Score: {score}/{questions.length}
+        <p className="font-retro text-sm text-[#888] mb-2">
+          Score: {score}/{shuffledQuestions.length}
+        </p>
+        <p className="font-retro text-[10px] text-[#888] mb-6">
+          {perfectScore
+            ? 'Tu es un vrai résistant numérique !'
+            : goodScore
+            ? 'Tu maîtrises bien les concepts NIRD !'
+            : okScore
+            ? 'Tu es sur la bonne voie !'
+            : 'Explore le village pour en apprendre plus !'}
         </p>
         <Button
           onClick={resetQuiz}
@@ -153,13 +272,13 @@ function MiniQuiz() {
   return (
     <div>
       <div className="font-retro text-[10px] text-[#888] mb-4">
-        QUESTION {currentQuestion + 1}/{questions.length}
+        QUESTION {currentQuestion + 1}/{shuffledQuestions.length}
       </div>
       <p className="font-retro text-sm text-[#f0f0f0] mb-6">
-        {questions[currentQuestion].question}
+        {shuffledQuestions[currentQuestion].question}
       </p>
       <div className="space-y-3">
-        {questions[currentQuestion].answers.map((answer, index) => (
+        {shuffledQuestions[currentQuestion].answers.map((answer, index) => (
           <button
             key={index}
             onClick={() => selectedAnswer === null && handleAnswer(index)}
@@ -167,17 +286,17 @@ function MiniQuiz() {
             className={`w-full text-left p-3 border-2 font-retro text-[10px] transition-all ${
               selectedAnswer === null
                 ? 'border-[#4a4a6a] hover:border-[#ffd700] text-[#888]'
-                : index === questions[currentQuestion].correct
+                : index === shuffledQuestions[currentQuestion].correct
                 ? 'border-[#22c55e] bg-[#22c55e]/20 text-[#22c55e]'
                 : index === selectedAnswer
                 ? 'border-[#ef4444] bg-[#ef4444]/20 text-[#ef4444]'
                 : 'border-[#4a4a6a] text-[#888]'
             }`}
           >
-            {selectedAnswer !== null && index === questions[currentQuestion].correct && (
+            {selectedAnswer !== null && index === shuffledQuestions[currentQuestion].correct && (
               <CheckCircle className="inline w-4 h-4 mr-2" />
             )}
-            {selectedAnswer === index && index !== questions[currentQuestion].correct && (
+            {selectedAnswer === index && index !== shuffledQuestions[currentQuestion].correct && (
               <XCircle className="inline w-4 h-4 mr-2" />
             )}
             {answer}
