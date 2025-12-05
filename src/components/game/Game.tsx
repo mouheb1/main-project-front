@@ -22,15 +22,6 @@ function getRandomItem<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
 // Generate identity from auth user or create fresh one
 function generateIdentity(authUser: GameUser | null): PlayerIdentity {
   if (authUser) {
@@ -69,7 +60,8 @@ function createPlayer(
 
 function createNPCs(canvasWidth: number, canvasHeight: number, count: number): NPC[] {
   const padding = NPC_SIZE * 2;
-  const selectedQuests = shuffleArray(QUESTS).slice(0, count);
+  // Use quests in order (no shuffle) for consistent NPC placement
+  const selectedQuests = QUESTS.slice(0, count);
   const npcs: NPC[] = [];
 
   // Create a grid to ensure NPCs are spread out
@@ -82,12 +74,12 @@ function createNPCs(canvasWidth: number, canvasHeight: number, count: number): N
     const col = index % gridCols;
     const row = Math.floor(index / gridCols);
 
-    // Random position within the grid cell
-    const x = padding + col * cellWidth + Math.random() * cellWidth * 0.6 + cellWidth * 0.2;
-    const y = padding + row * cellHeight + Math.random() * cellHeight * 0.6 + cellHeight * 0.2;
+    // Fixed position at center of each grid cell (no randomness)
+    const x = padding + col * cellWidth + cellWidth * 0.5;
+    const y = padding + row * cellHeight + cellHeight * 0.5;
 
     npcs.push({
-      id: crypto.randomUUID(),
+      id: `npc-${quest.id}`, // Use quest id for stable NPC id
       quest,
       position: { x, y },
     });
