@@ -1,5 +1,7 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useRef, useEffect } from 'react';
 import {
   Shield,
   Leaf,
@@ -14,7 +16,24 @@ import {
   MapPin,
   Gamepad2,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  Server,
+  Database,
+  FileText,
+  Globe,
+  Zap,
+  TrendingDown,
+  Euro,
+  HardDrive,
+  Cloud,
+  Lock,
+  CheckCircle,
+  XCircle,
+  Swords,
+  Castle,
+  Home,
+  Store,
+  TreePine
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -31,6 +50,143 @@ const staggerContainer = {
     }
   }
 };
+
+// Animated counter component
+function AnimatedCounter({ target, suffix = '', prefix = '' }: { target: number; suffix?: string; prefix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (isInView) {
+      const duration = 2000;
+      const steps = 60;
+      const increment = target / steps;
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          setCount(target);
+          clearInterval(timer);
+        } else {
+          setCount(Math.floor(current));
+        }
+      }, duration / steps);
+      return () => clearInterval(timer);
+    }
+  }, [isInView, target]);
+
+  return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
+}
+
+// Quiz component
+function MiniQuiz() {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+
+  const questions = [
+    {
+      question: "Que signifie NIRD ?",
+      answers: [
+        "Numérique Innovant et Rapide Digital",
+        "Numérique Inclusif, Responsable et Durable",
+        "Nouveau Internet pour les Régions et Départements",
+        "Network Infrastructure for Remote Development"
+      ],
+      correct: 1
+    },
+    {
+      question: "Quel système d'exploitation libre peut remplacer Windows ?",
+      answers: ["macOS", "Linux", "ChromeOS", "DOS"],
+      correct: 1
+    },
+    {
+      question: "Quelle alternative open source remplace Microsoft Office ?",
+      answers: ["Google Docs", "LibreOffice", "Notepad", "Adobe Reader"],
+      correct: 1
+    }
+  ];
+
+  const handleAnswer = (index: number) => {
+    setSelectedAnswer(index);
+    if (index === questions[currentQuestion].correct) {
+      setScore(score + 1);
+    }
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+        setSelectedAnswer(null);
+      } else {
+        setShowResult(true);
+      }
+    }, 1000);
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setScore(0);
+    setShowResult(false);
+    setSelectedAnswer(null);
+  };
+
+  if (showResult) {
+    return (
+      <div className="text-center">
+        <div className="font-retro text-2xl text-[#ffd700] mb-4">
+          {score === questions.length ? 'PARFAIT !' : score >= 2 ? 'BIEN JOUÉ !' : 'CONTINUE !'}
+        </div>
+        <p className="font-retro text-sm text-[#888] mb-6">
+          Score: {score}/{questions.length}
+        </p>
+        <Button
+          onClick={resetQuiz}
+          className="bg-[#ffd700] hover:bg-[#ffed4a] text-[#0f0f1e] font-retro text-xs px-4 py-2"
+        >
+          REJOUER
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="font-retro text-[10px] text-[#888] mb-4">
+        QUESTION {currentQuestion + 1}/{questions.length}
+      </div>
+      <p className="font-retro text-sm text-[#f0f0f0] mb-6">
+        {questions[currentQuestion].question}
+      </p>
+      <div className="space-y-3">
+        {questions[currentQuestion].answers.map((answer, index) => (
+          <button
+            key={index}
+            onClick={() => selectedAnswer === null && handleAnswer(index)}
+            disabled={selectedAnswer !== null}
+            className={`w-full text-left p-3 border-2 font-retro text-[10px] transition-all ${
+              selectedAnswer === null
+                ? 'border-[#4a4a6a] hover:border-[#ffd700] text-[#888]'
+                : index === questions[currentQuestion].correct
+                ? 'border-[#22c55e] bg-[#22c55e]/20 text-[#22c55e]'
+                : index === selectedAnswer
+                ? 'border-[#ef4444] bg-[#ef4444]/20 text-[#ef4444]'
+                : 'border-[#4a4a6a] text-[#888]'
+            }`}
+          >
+            {selectedAnswer !== null && index === questions[currentQuestion].correct && (
+              <CheckCircle className="inline w-4 h-4 mr-2" />
+            )}
+            {selectedAnswer === index && index !== questions[currentQuestion].correct && (
+              <XCircle className="inline w-4 h-4 mr-2" />
+            )}
+            {answer}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function LandingPage() {
   const navigate = useNavigate();
@@ -110,6 +266,294 @@ export function LandingPage() {
             <div className="w-1 h-3 bg-[#ffd700]" />
           </div>
         </motion.div>
+      </section>
+
+      {/* Animated Statistics Section */}
+      <section className="py-20 px-4 bg-[#0f0f1e] relative">
+        <div className="absolute inset-x-0 top-0 h-1 bg-[#ffd700]" />
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-retro text-xl md:text-2xl text-[#ffd700] mb-4 tracking-wider">
+              POURQUOI <span className="text-[#ef4444]">RÉSISTER</span> ?
+            </h2>
+            <p className="font-retro text-xs md:text-sm text-[#888]">
+              Les chiffres qui font réfléchir
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: Euro, value: 500, suffix: 'M€', label: 'dépensés en licences/an en France', color: '#ef4444' },
+              { icon: HardDrive, value: 53, suffix: 'Mt', label: 'de déchets électroniques/an mondial', color: '#f59e0b' },
+              { icon: Cloud, value: 90, suffix: '%', label: 'des données hors UE (GAFAM)', color: '#3b82f6' },
+              { icon: TrendingDown, value: 70, suffix: '%', label: "d'économies avec le libre", color: '#22c55e' }
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-[#1a1a2e] border-4 border-[#4a4a6a] p-4 text-center hover:border-[#ffd700] transition-all group"
+              >
+                <stat.icon className="w-8 h-8 mx-auto mb-3 group-hover:scale-110 transition-transform" style={{ color: stat.color }} />
+                <div className="font-retro text-2xl md:text-3xl mb-2" style={{ color: stat.color }}>
+                  <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                </div>
+                <p className="font-retro text-[8px] text-[#888]">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Digital Village Map Section */}
+      <section className="py-20 px-4 bg-[#1a1a2e] relative">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-retro text-xl md:text-2xl text-[#ffd700] mb-4 tracking-wider">
+              NOTRE <span className="text-[#22c55e]">VILLAGE</span> NUMÉRIQUE
+            </h2>
+            <p className="font-retro text-xs md:text-sm text-[#888]">
+              Comme le village d'Astérix, nous résistons encore et toujours !
+            </p>
+          </motion.div>
+
+          {/* Village Map */}
+          <div className="relative bg-[#0f0f1e] border-4 border-[#ffd700] p-8 overflow-hidden">
+            {/* Decorative trees */}
+            <div className="absolute top-4 left-4 text-[#22c55e] opacity-30">
+              <TreePine className="w-8 h-8" />
+            </div>
+            <div className="absolute top-4 right-4 text-[#22c55e] opacity-30">
+              <TreePine className="w-8 h-8" />
+            </div>
+            <div className="absolute bottom-4 left-8 text-[#22c55e] opacity-30">
+              <TreePine className="w-6 h-6" />
+            </div>
+            <div className="absolute bottom-4 right-8 text-[#22c55e] opacity-30">
+              <TreePine className="w-6 h-6" />
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: Castle,
+                  name: "LA FORGE",
+                  description: "Centre de formation aux logiciels libres",
+                  color: '#ffd700'
+                },
+                {
+                  icon: Home,
+                  name: "L'ÉCOLE LIBRE",
+                  description: "Établissements équipés en open source",
+                  color: '#3b82f6'
+                },
+                {
+                  icon: Store,
+                  name: "LE RECYCLEUR",
+                  description: "Atelier de reconditionnement du matériel",
+                  color: '#22c55e'
+                },
+                {
+                  icon: Server,
+                  name: "LE DATACENTER",
+                  description: "Hébergement souverain des données",
+                  color: '#8b5cf6'
+                },
+                {
+                  icon: Swords,
+                  name: "L'ARÈNE",
+                  description: "Défis et compétitions numériques",
+                  color: '#ef4444'
+                },
+                {
+                  icon: Globe,
+                  name: "LA PLACE",
+                  description: "Communauté et partage de ressources",
+                  color: '#f59e0b'
+                }
+              ].map((building, index) => (
+                <motion.div
+                  key={building.name}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="bg-[#1a1a2e] border-2 p-4 text-center cursor-pointer transition-all"
+                  style={{ borderColor: building.color }}
+                >
+                  <div
+                    className="w-12 h-12 mx-auto mb-3 border-2 flex items-center justify-center"
+                    style={{ borderColor: building.color }}
+                  >
+                    <building.icon className="w-6 h-6" style={{ color: building.color }} />
+                  </div>
+                  <h3 className="font-retro text-xs mb-2" style={{ color: building.color }}>
+                    {building.name}
+                  </h3>
+                  <p className="font-retro text-[8px] text-[#888]">{building.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Open Source Arsenal Section */}
+      <section className="py-20 px-4 bg-[#0f0f1e] relative">
+        <div className="absolute inset-x-0 top-0 h-1 bg-[#ffd700]" />
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-retro text-xl md:text-2xl text-[#ffd700] mb-4 tracking-wider">
+              L'ARSENAL <span className="text-[#8b5cf6]">OPEN SOURCE</span>
+            </h2>
+            <p className="font-retro text-xs md:text-sm text-[#888]">
+              Nos armes pour la résistance numérique
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              {
+                icon: Laptop,
+                name: 'Linux',
+                type: 'Système',
+                description: 'Ubuntu, Debian, Fedora...',
+                replaces: 'Windows',
+                color: '#f59e0b'
+              },
+              {
+                icon: FileText,
+                name: 'LibreOffice',
+                type: 'Bureautique',
+                description: 'Writer, Calc, Impress',
+                replaces: 'MS Office',
+                color: '#22c55e'
+              },
+              {
+                icon: Globe,
+                name: 'Firefox',
+                type: 'Navigateur',
+                description: 'Respectueux de la vie privée',
+                replaces: 'Chrome',
+                color: '#ef4444'
+              },
+              {
+                icon: Database,
+                name: 'Nextcloud',
+                type: 'Cloud',
+                description: 'Stockage souverain',
+                replaces: 'Google Drive',
+                color: '#3b82f6'
+              },
+              {
+                icon: Code,
+                name: 'GIMP',
+                type: 'Image',
+                description: 'Édition photo pro',
+                replaces: 'Photoshop',
+                color: '#8b5cf6'
+              },
+              {
+                icon: Zap,
+                name: 'Moodle',
+                type: 'E-learning',
+                description: 'Plateforme éducative',
+                replaces: 'Classroom',
+                color: '#f59e0b'
+              },
+              {
+                icon: Lock,
+                name: 'Bitwarden',
+                type: 'Sécurité',
+                description: 'Gestionnaire de mots de passe',
+                replaces: 'LastPass',
+                color: '#22c55e'
+              },
+              {
+                icon: Server,
+                name: 'PeerTube',
+                type: 'Vidéo',
+                description: 'Hébergement décentralisé',
+                replaces: 'YouTube',
+                color: '#ef4444'
+              }
+            ].map((tool, index) => (
+              <motion.div
+                key={tool.name}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-[#1a1a2e] border-2 border-[#4a4a6a] p-4 hover:border-[#ffd700] transition-all group"
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-10 h-10 border-2 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
+                    style={{ borderColor: tool.color }}
+                  >
+                    <tool.icon className="w-5 h-5" style={{ color: tool.color }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-retro text-xs text-[#ffd700]">{tool.name}</h3>
+                      <span className="font-retro text-[6px] px-1 bg-[#4a4a6a] text-[#888]">{tool.type}</span>
+                    </div>
+                    <p className="font-retro text-[8px] text-[#888] mb-1">{tool.description}</p>
+                    <p className="font-retro text-[7px] text-[#ef4444]">
+                      Remplace: {tool.replaces}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Quiz Section */}
+      <section className="py-20 px-4 bg-[#1a1a2e] relative">
+        <div className="max-w-2xl mx-auto relative z-10">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-retro text-xl md:text-2xl text-[#ffd700] mb-4 tracking-wider">
+              TESTEZ VOS <span className="text-[#3b82f6]">CONNAISSANCES</span>
+            </h2>
+            <p className="font-retro text-xs md:text-sm text-[#888]">
+              Êtes-vous prêt pour la résistance numérique ?
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-[#0f0f1e] border-4 border-[#ffd700] p-6"
+          >
+            <MiniQuiz />
+          </motion.div>
+        </div>
       </section>
 
       {/* What is NIRD Section */}
