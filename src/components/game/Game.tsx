@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { Shape } from './Shape';
+import { PixelCharacter } from './PixelCharacter';
+import { VillageBackground } from './VillageBackground';
 import { DPad } from './DPad';
 import { NPCCharacter } from './NPCCharacter';
 import { ZeldaDialog } from './ZeldaDialog';
@@ -475,29 +476,9 @@ export function Game() {
       <div
         ref={canvasRef}
         className="flex-1 relative overflow-hidden"
-        style={{
-          background: `
-            linear-gradient(to bottom, #1a1a2e 0%, #0f0f1e 100%)
-          `,
-        }}
       >
-        {/* Pixel grid pattern */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, #2a2a4e 1px, transparent 1px),
-              linear-gradient(to bottom, #2a2a4e 1px, transparent 1px)
-            `,
-            backgroundSize: '32px 32px',
-          }}
-        />
-
-        {/* Decorative corner borders */}
-        <div className="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 border-[#ffd700]/30" />
-        <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-[#ffd700]/30" />
-        <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-[#ffd700]/30" />
-        <div className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-[#ffd700]/30" />
+        {/* Village Background */}
+        <VillageBackground width={canvasSize.width} height={canvasSize.height} />
 
         {/* NPCs */}
         {npcs.map((npc) => (
@@ -522,15 +503,15 @@ export function Game() {
           >
             {/* Username label */}
             <div
-              className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-retro text-[8px] px-1 py-0.5 bg-black/50 rounded"
+              className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap font-retro text-[8px] px-1 py-0.5 bg-black/70 rounded border border-[#4a4a6a]"
               style={{ color: remotePlayer.color }}
             >
               {remotePlayer.odUsername}
             </div>
-            <Shape
-              type={remotePlayer.shape}
+            <PixelCharacter
               color={remotePlayer.color}
               size={PLAYER_SIZE}
+              variant="villager"
             />
           </div>
         ))}
@@ -547,15 +528,15 @@ export function Game() {
           >
             {/* Username label */}
             <div
-              className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-retro text-[8px] px-1 py-0.5 bg-black/50 rounded"
-              style={{ color: player.color }}
+              className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap font-retro text-[8px] px-2 py-0.5 bg-[#ffd700] text-[#0f0f1e] rounded border-2 border-[#0f0f1e]"
             >
               {identity.odUsername} (Vous)
             </div>
-            <Shape
-              type={player.shape}
+            <PixelCharacter
               color={player.color}
               size={player.size}
+              variant="player"
+              isMoving={activeDirections.size > 0}
             />
           </div>
         )}
