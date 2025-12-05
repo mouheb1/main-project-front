@@ -23,7 +23,7 @@ export function LoginModal({ onLogin }: LoginModalProps) {
           setSelectedTeamId(fetchedTeams[0].id);
         }
       } catch (err) {
-        setError('Failed to load teams. Please try again.');
+        setError('Échec du chargement des équipes. Veuillez réessayer.');
         console.error('Failed to load teams:', err);
       } finally {
         setIsLoadingTeams(false);
@@ -37,12 +37,12 @@ export function LoginModal({ onLogin }: LoginModalProps) {
     setError('');
 
     if (!username.trim()) {
-      setError('Please enter a username');
+      setError('Veuillez entrer un nom d\'utilisateur');
       return;
     }
 
     if (!selectedTeamId) {
-      setError('Please select a team');
+      setError('Veuillez sélectionner une équipe');
       return;
     }
 
@@ -51,7 +51,7 @@ export function LoginModal({ onLogin }: LoginModalProps) {
       const response = await gameApi.login(username.trim(), selectedTeamId);
       onLogin(response.data.user);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? err.message : 'Échec de la connexion');
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +66,7 @@ export function LoginModal({ onLogin }: LoginModalProps) {
             QUEST RPG
           </h2>
           <p className="font-retro text-[#888] text-[10px] sm:text-xs">
-            Enter your name and join a team
+            Entrez votre nom et rejoignez une équipe
           </p>
         </div>
 
@@ -74,13 +74,13 @@ export function LoginModal({ onLogin }: LoginModalProps) {
           {/* Username Input */}
           <div>
             <label className="block font-retro text-[#f0f0f0] text-xs mb-2">
-              HERO NAME
+              NOM DU HÉROS
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your name..."
+              placeholder="Entrez votre nom..."
               maxLength={20}
               className="w-full px-4 py-3 bg-[#1a1a2e] border-2 border-[#4a4a6a] text-[#f0f0f0] font-retro text-sm focus:border-[#ffd700] focus:outline-none placeholder-[#666]"
               disabled={isLoading}
@@ -90,18 +90,18 @@ export function LoginModal({ onLogin }: LoginModalProps) {
           {/* Team Selection */}
           <div>
             <label className="block font-retro text-[#f0f0f0] text-xs mb-2">
-              SELECT TEAM
+              CHOISIR ÉQUIPE
             </label>
             {isLoadingTeams ? (
               <div className="text-center py-4">
                 <span className="font-retro text-[#888] text-xs animate-pulse">
-                  Loading teams...
+                  Chargement des équipes...
                 </span>
               </div>
             ) : teams.length === 0 ? (
               <div className="text-center py-4">
                 <span className="font-retro text-[#ff4444] text-xs">
-                  No teams available
+                  Aucune équipe disponible
                 </span>
               </div>
             ) : (
@@ -163,13 +163,13 @@ export function LoginModal({ onLogin }: LoginModalProps) {
             disabled={isLoading || isLoadingTeams || !username.trim() || !selectedTeamId}
             className="w-full py-3 bg-[#ffd700] text-[#0f0f1e] font-retro text-sm hover:bg-[#ffed4a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isLoading ? 'JOINING...' : 'START ADVENTURE'}
+            {isLoading ? 'CONNEXION...' : 'COMMENCER L\'AVENTURE'}
           </button>
         </form>
 
         {/* Footer */}
         <p className="mt-6 text-center font-retro text-[#666] text-[8px]">
-          Complete quests to earn points for your team!
+          Complétez les quêtes pour gagner des points pour votre équipe !
         </p>
       </div>
     </div>

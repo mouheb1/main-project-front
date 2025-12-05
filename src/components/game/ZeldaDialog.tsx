@@ -51,11 +51,11 @@ function useTypewriter(text: string, speed: number = 30, enabled: boolean = true
 
 // Thank you messages for completed quests
 const THANK_YOU_MESSAGES = [
-  "You've already helped me, brave adventurer! Thank you!",
-  "Ah, my friend! You solved my riddle before. Safe travels!",
-  "The answer you gave was most wise. I remember you well!",
-  "Hero! You've already proven your worth to me.",
-  "Your wisdom still echoes in my memory. Thank you again!",
+  "Tu m'as déjà aidé, brave aventurier ! Merci !",
+  "Ah, mon ami ! Tu as résolu mon énigme auparavant. Bon voyage !",
+  "Ta réponse était des plus sages. Je me souviens bien de toi !",
+  "Héros ! Tu as déjà prouvé ta valeur à mes yeux.",
+  "Ta sagesse résonne encore dans ma mémoire. Merci encore !",
 ];
 
 function getThankYouMessage(questId: string): string {
@@ -231,7 +231,7 @@ export function ZeldaDialog({
             {isAlreadyCompleted && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <div className="font-retro text-[8px] text-[#00ff00] bg-[#1a1a2e] border border-[#00ff00] px-3 py-1">
-                  ✓ COMPLETED
+                  ✓ TERMINÉE
                 </div>
               </div>
             )}
@@ -278,7 +278,7 @@ export function ZeldaDialog({
                     </p>
                     {isComplete && (
                       <p className="font-retro text-[#666] text-[8px] mt-4 animate-pulse">
-                        Press ENTER to continue...
+                        Appuyez ENTRÉE pour continuer...
                       </p>
                     )}
                   </div>
@@ -336,7 +336,7 @@ export function ZeldaDialog({
                       {answeredCorrectly ? quest.correctResponse : quest.wrongResponse}
                     </p>
                     <p className="font-retro text-[#888] text-[8px] mt-4 animate-pulse">
-                      Press ENTER to continue...
+                      Appuyez ENTRÉE pour continuer...
                     </p>
                   </div>
                 )}
@@ -346,7 +346,7 @@ export function ZeldaDialog({
             {/* Bottom hint */}
             {!showFeedback && isComplete && !isAlreadyCompleted && (
               <div className="absolute bottom-2 right-4 font-retro text-[#666] text-[6px] sm:text-[8px]">
-                ↑↓ SELECT • ENTER CONFIRM • ESC CLOSE
+                ↑↓ SÉLECT. • ENTRÉE VALIDER • ÉCHAP FERMER
               </div>
             )}
           </div>

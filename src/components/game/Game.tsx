@@ -379,11 +379,11 @@ export function Game() {
   const getStatusText = () => {
     switch (connectionStatus) {
       case 'connected':
-        return 'Online';
+        return 'En ligne';
       case 'connecting':
-        return 'Connecting...';
+        return 'Connexion...';
       default:
-        return 'Offline';
+        return 'Hors ligne';
     }
   };
 
@@ -398,7 +398,7 @@ export function Game() {
       {scoreFeedback && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-bounce">
           <div className="bg-[#22c55e] text-white px-4 py-2 font-retro text-xs sm:text-sm shadow-lg border-2 border-[#16a34a]">
-            +{scoreFeedback.points} pts for {scoreFeedback.teamName}!
+            +{scoreFeedback.points} pts pour {scoreFeedback.teamName} !
           </div>
         </div>
       )}
@@ -466,7 +466,7 @@ export function Game() {
             onClick={handleLogout}
             className="px-2 py-1 bg-[#ef4444] hover:bg-[#dc2626] text-white font-retro text-[8px] sm:text-[10px] transition-colors"
           >
-            LOGOUT
+            DÉCONNEXION
           </button>
         </div>
       </header>
@@ -550,7 +550,7 @@ export function Game() {
               className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-retro text-[8px] px-1 py-0.5 bg-black/50 rounded"
               style={{ color: player.color }}
             >
-              {identity.odUsername} (You)
+              {identity.odUsername} (Vous)
             </div>
             <Shape
               type={player.shape}
@@ -572,13 +572,13 @@ export function Game() {
           <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-20">
             <div className="bg-[#0f0f1e] border-4 border-[#ffd700] p-6 sm:p-8 text-center shadow-[0_0_30px_rgba(255,215,0,0.3)]">
               <div className="font-retro text-[#ffd700] text-sm sm:text-base mb-4 animate-pulse">
-                VICTORY
+                VICTOIRE
               </div>
               <p className="font-retro text-[#00ff00] text-xs sm:text-sm mb-2">
-                ALL QUESTS COMPLETE!
+                TOUTES LES QUÊTES TERMINÉES !
               </p>
               <p className="font-retro text-white text-[10px] sm:text-xs">
-                SCORE: {completedCount}/{totalQuests}
+                SCORE : {completedCount}/{totalQuests}
               </p>
             </div>
           </div>
@@ -599,7 +599,7 @@ export function Game() {
       {/* Mobile hint */}
       <footer className="sm:hidden px-4 py-2 bg-[#0f0f1e] border-t-2 border-[#4a4a6a]">
         <p className="font-retro text-[8px] text-[#888] text-center">
-          APPROACH NPC + PRESS ENTER TO TALK
+          APPROCHEZ DU PNJ + ENTRÉE POUR PARLER
         </p>
       </footer>
     </div>
