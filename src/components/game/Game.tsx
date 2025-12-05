@@ -110,7 +110,14 @@ export function Game() {
   const [identity, setIdentity] = useState<PlayerIdentity>(() => generateIdentity(authUser));
 
   // User progress tracking (multi-user ready)
-  const { isQuestCompleted, completeQuest, completedCount } = useUserProgress();
+  const { isQuestCompleted, completeQuest, completedCount, setCurrentUser, resetProgress } = useUserProgress();
+
+  // Set current user for progress tracking when authUser is available
+  useEffect(() => {
+    if (authUser?.id) {
+      setCurrentUser(authUser.id);
+    }
+  }, [authUser?.id, setCurrentUser]);
 
   // Quest/Dialog state
   const [activeNPC, setActiveNPC] = useState<NPC | null>(null);
@@ -289,9 +296,12 @@ export function Game() {
     setIsAuthenticated(true);
     // Update identity with new user info
     setIdentity(generateIdentity(user));
+    // Set current user and reset their progress (fresh start on each login)
+    setCurrentUser(user.id);
+    resetProgress(user.id);
     // Hard reload to ensure proper initialization
     window.location.reload();
-  }, []);
+  }, [setCurrentUser, resetProgress]);
 
   const handleAnswer = useCallback(
     async (answerIndex: number) => {
